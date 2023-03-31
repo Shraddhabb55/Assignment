@@ -1,0 +1,101 @@
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Scanner;
+ 
+ class NewspaperSubscription 
+ {
+     private String name;
+     private HashMap<String, Double> prices;
+     
+     public NewspaperSubscription()
+     {
+    	
+     }
+ 
+     //created parameterize constructor for initialization of declared HashMap
+     
+     public NewspaperSubscription(String name, double mondayPrice, double tuesdayPrice, double wednesdayPrice, double thursdayPrice,
+                      double fridayPrice, double saturdayPrice, double sundayPrice) 
+     {
+         this.name = name;
+         prices = new HashMap<>();
+         
+         //storing prizes of each day with day as key and respective price parameter as value 
+         
+         prices.put("Monday"   , mondayPrice);
+         prices.put("Tuesday"  , tuesdayPrice);
+         prices.put("Wednesday", wednesdayPrice);
+         prices.put("Thursday" , thursdayPrice);
+         prices.put("Friday"   , fridayPrice);
+         prices.put("Saturday" , saturdayPrice);
+         prices.put("Sunday"   , sundayPrice);
+     }
+ 
+     public double getWeeklyPrice() 
+     {
+         double weeklyprice=0.0d;
+    	 for (double value : this.prices.values()) 
+    	 {
+    		    weeklyprice = weeklyprice + value;
+    	 }
+    	 return weeklyprice;
+     }
+ 
+     public String getName() 
+     {
+         return name;
+     }
+     
+     public List<HashMap<String, String>> getPossibleCombinations(double budget, List<Newspaper>newspapers ) 
+     {
+         List<HashMap<String, String>> combinations = new ArrayList<>();
+ 
+         for (int i = 0; i < newspapers.size(); i++) 
+         {
+        	 Newspaper newspaper1 = newspapers.get(i);
+        	 
+             for (int j = i + 1; j < newspapers.size(); j++) 
+             {
+                 
+                 Newspaper newspaper2 = newspapers.get(j);
+ 
+                 double total_price = newspaper1.getWeeklyPrice() + newspaper2.getWeeklyPrice();
+ 
+                 if (total_price <= budget) 
+                 {
+                     HashMap<String, String> map = new HashMap<>();
+                     map.put(newspaper1.getName(), newspaper2.getName());
+                     combinations.add(map);
+                 }
+             }
+         }
+ 
+         return combinations;
+     }
+     
+ 
+    public static void main(String[] args) 
+    {
+         
+         //creating these objects because prices are different for each day
+         //storing the prizes of each day saperatly will help to identify the cost coverage
+         
+         Newspaper toi   = new Newspaper("TOI", 3, 3, 3, 3, 3, 5, 6);
+         Newspaper hindu = new Newspaper("Hindu", 2.5, 2.5, 2.5, 2.5, 2.5, 4, 4);
+         Newspaper et    = new Newspaper("ET", 4, 4, 4, 4, 4, 4, 10);
+         Newspaper bm    = new Newspaper("BM", 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5);
+         Newspaper ht    = new Newspaper("HT", 2, 2, 2, 2, 2, 4, 4);
+         
+         Scanner sc = new Scanner(System.in);
+         System.out.println("Enter your budget");
+         int budget = sc.nextInt();
+         Newspaper calculator= new Newspaper();
+ 
+         List<HashMap<String, String>> newsPapersInBudget = calculator.getPossibleCombinations(budget, List.of(toi, hindu, et, bm, ht));
+         
+         System.out.println(" These are the possible combination under your budget:");
+         System.out.println(newsPapersInBudget);
+        
+     }
+ }
